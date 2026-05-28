@@ -1,0 +1,1017 @@
+{
+  "info": {
+    "name": "🚗 Driving School API",
+    "description": "API cho hệ thống quản lý trung tâm đào tạo lái xe.\n\n## Hướng dẫn:\n1. Gọi Login để lấy token\n2. Token tự động lưu vào biến {{token}}\n3. Các API Admin sẽ tự gắn token vào header",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    console.log(' Token saved!');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register (Seed)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"editor\",\n  \"password\": \"editor123\",\n  \"email\": \"editor@test.com\",\n  \"role\": \"Editor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📚 Khóa học (Courses)",
+      "item": [
+        {
+          "name": "[Public] Danh sách khóa học",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/courses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Public] Chi tiết khóa học",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/courses/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tất cả khóa học",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/courses/admin/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses",
+                "admin",
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo khóa học",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Khóa học lái xe hạng A1",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Khóa học lái xe mô tô",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "3000000",
+                  "type": "text"
+                },
+                {
+                  "key": "discount_percentage",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "license_type_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/courses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cập nhật khóa học",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Khóa học lái xe hạng A1 - Cập nhật",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "3500000",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/courses/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Xóa khóa học",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/courses/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🪪 Loại bằng (License Types)",
+      "item": [
+        {
+          "name": "[Public] Danh sách loại bằng",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/license-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "license-types"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo loại bằng",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"D\",\n  \"name\": \"Hạng D\",\n  \"description\": \"Xe ô tô chở người trên 9 chỗ\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/license-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "license-types"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👨‍🏫 Giáo viên (Teachers)",
+      "item": [
+        {
+          "name": "[Public] Danh sách giáo viên",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/teachers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "teachers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo giáo viên",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Nguyễn Văn A",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "10 năm kinh nghiệm, chuyên dạy hạng B2",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/teachers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "teachers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cập nhật giáo viên",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Nguyễn Văn A - Updated",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/teachers/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "teachers",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Xóa giáo viên",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/teachers/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "teachers",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📰 Tin tức (News)",
+      "item": [
+        {
+          "name": "[Public] Danh sách tin tức",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/news",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "news"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo tin tức",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Quy trình thi bằng lái xe B2 mới nhất 2026",
+                  "type": "text"
+                },
+                {
+                  "key": "content",
+                  "value": "<h2>Quy trình thi</h2><p>Nội dung bài viết...</p>",
+                  "type": "text"
+                },
+                {
+                  "key": "thumbnail_image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/news",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "news"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏆 Thành tích (Achievements)",
+      "item": [
+        {
+          "name": "[Public] Danh sách thành tích",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/achievements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo thành tích",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Bằng khen Sở GTVT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Đơn vị đào tạo xuất sắc năm 2025",
+                  "type": "text"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/achievements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚙️ Cài đặt hệ thống (Settings)",
+      "item": [
+        {
+          "name": "[Public] Lấy tất cả settings",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/system-settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "system-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cập nhật 1 setting",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"setting_key\": \"hotline\",\n  \"setting_value\": \"0909999888\",\n  \"description\": \"Số hotline mới\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/system-settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "system-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cập nhật nhiều settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"settings\": [\n    { \"setting_key\": \"hotline\", \"setting_value\": \"0909999888\" },\n    { \"setting_key\": \"address\", \"setting_value\": \"456 Đường ABC, Quận 2, TP.HCM\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/system-settings/bulk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "system-settings",
+                "bulk"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🖼️ Banner",
+      "item": [
+        {
+          "name": "[Public] Danh sách banner",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/banners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banners"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo banner",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Ưu đãi tháng 5 - Giảm 20%",
+                  "type": "text"
+                },
+                {
+                  "key": "target_url",
+                  "value": "/khoa-hoc/b2",
+                  "type": "text"
+                },
+                {
+                  "key": "display_order",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/banners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banners"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⭐ Leads (Form Landing Page)",
+      "item": [
+        {
+          "name": "⭐ [Public] Đăng ký từ Landing Page",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Nguyễn Văn Test\",\n  \"phone\": \"0912345678\",\n  \"course_interested_id\": 1,\n  \"customer_notes\": \"Tôi muốn học cuối tuần\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/leads",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leads"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Danh sách leads",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/leads?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leads"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cập nhật trạng thái lead",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": 1,\n  \"telesale_notes\": \"Đã gọi, khách hẹn 5 ngày nữa quay lại\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/leads/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leads",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎓 Học viên (Students)",
+      "item": [
+        {
+          "name": "[Admin] Danh sách học viên",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/students?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo học viên",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"hocvien01\",\n  \"password\": \"123456\",\n  \"full_name\": \"Trần Thị B\",\n  \"phone\": \"0987654321\",\n  \"email\": \"b@test.com\",\n  \"address\": \"123 Quận 1, TP.HCM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📝 Đăng ký khóa học (Registrations)",
+      "item": [
+        {
+          "name": "[Admin] Danh sách đăng ký",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/course-registrations?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course-registrations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Tạo đăng ký",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"course_id\": 1,\n  \"payment_price\": 4500000,\n  \"notes\": \"Học viên đăng ký online\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/course-registrations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course-registrations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cập nhật trạng thái",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_status\": 1,\n  \"process_status\": 1,\n  \"notes\": \"Đã nhận cọc 2 triệu\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/course-registrations/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course-registrations",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📤 Upload (Chunked)",
+      "item": [
+        {
+          "name": "[Admin] Upload chunk",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "chunk",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "fileId",
+                  "value": "unique-file-id-123",
+                  "type": "text"
+                },
+                {
+                  "key": "chunkIndex",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "totalChunks",
+                  "value": "3",
+                  "type": "text"
+                },
+                {
+                  "key": "fileName",
+                  "value": "banner.jpg",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/upload/chunk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "upload",
+                "chunk"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Merge chunks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileId\": \"unique-file-id-123\",\n  \"totalChunks\": 3,\n  \"fileName\": \"banner.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/upload/merge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "upload",
+                "merge"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[Admin] Cancel upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileId\": \"unique-file-id-123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/upload/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "upload",
+                "cancel"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
