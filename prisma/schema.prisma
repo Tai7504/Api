@@ -56,6 +56,7 @@ model Course {
   discount_percentage Int?      @default(0)
   license_type_id     Int?
   status              Boolean   @default(true)
+  sort_order          Int       @default(0)
   Created_time        DateTime  @default(now())
   Created_by          String?   @db.NVarChar(255)
   Modify_time         DateTime? @updatedAt

@@ -97,18 +97,50 @@ exports.create = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Giảm giá phải nằm trong khoảng từ 0 đến 100%!' })
     }
 
-    // Kiểm tra trùng mã
+    // Kiểm tra trùng mã (bao gồm cả các mã đã bị soft-deleted để tránh lỗi Unique Constraint của DB)
     const existing = await prisma.voucher.findFirst({
-      where: { code: code.trim(), is_deleted: false }
+      where: { code: code.trim() }
     })
-    if (existing) {
-      return res.status(400).json({ success: false, message: 'Mã voucher này đã tồn tại!' })
-    }
-
+    
     // Parse course_ids nếu được gửi dưới dạng string JSON
     let parsedCourseIds = []
     if (course_ids) {
       parsedCourseIds = Array.isArray(course_ids) ? course_ids : JSON.parse(course_ids)
+    }
+
+    if (existing) {
+      if (!existing.is_deleted) {
+        return res.status(400).json({ success: false, message: 'Mã voucher này đã tồn tại!' })
+      }
+
+      // Nếu voucher đã tồn tại nhưng ở trạng thái bị xóa mềm (is_deleted: true),
+      // ta tiến hành khôi phục (is_deleted: false) và cập nhật thông tin mới.
+      
+      // 1. Xóa các liên kết khóa học cũ của voucher này
+      await prisma.voucherCourse.deleteMany({
+        where: { voucher_id: existing.id }
+      })
+
+      // 2. Khôi phục và cập nhật
+      const voucher = await prisma.voucher.update({
+        where: { id: existing.id },
+        data: {
+          discount: discountVal,
+          description: description || null,
+          terms: terms || null,
+          status: status !== false && status !== 'false',
+          is_deleted: false, // Khôi phục trạng thái hoạt động
+          Modify_by: req.user?.username || null,
+          courses: {
+            create: parsedCourseIds.map(cId => ({ course_id: parseInt(cId) }))
+          }
+        },
+        include: {
+          courses: true
+        }
+      })
+
+      return res.status(200).json({ success: true, data: voucher, message: 'Khôi phục và cập nhật voucher thành công!' })
     }
 
     const voucher = await prisma.voucher.create({
@@ -144,12 +176,12 @@ exports.update = async (req, res) => {
 
     if (code !== undefined) {
       const codeTrim = code.trim()
-      // Kiểm tra trùng mã với voucher khác
+      // Kiểm tra trùng mã với voucher khác (bao gồm cả các mã đã bị soft-deleted)
       const existing = await prisma.voucher.findFirst({
-        where: { code: codeTrim, id: { not: voucherId }, is_deleted: false }
+        where: { code: codeTrim, id: { not: voucherId } }
       })
       if (existing) {
-        return res.status(400).json({ success: false, message: 'Mã voucher này đã tồn tại!' })
+        return res.status(400).json({ success: false, message: 'Mã voucher này đã tồn tại trong hệ thống (kể cả đã bị xóa mềm)!' })
       }
       data.code = codeTrim
     }

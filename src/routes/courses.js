@@ -10,6 +10,7 @@ router.get('/:id', ctrl.getById)
 // Admin
 router.get('/admin/all', auth, ctrl.getAllAdmin)
 router.post('/', auth, upload.single('image'), ctrl.create)
+router.put('/sort-order', auth, ctrl.updateSortOrder)
 router.put('/:id', auth, upload.single('image'), ctrl.update)
 router.delete('/:id', auth, ctrl.delete)
 
