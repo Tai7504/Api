@@ -1,0 +1,33 @@
+{
+  "name": "driving-school-api",
+  "version": "1.0.0",
+  "description": "API for Driving School Landing Page & Admin",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "prisma:pull": "npx prisma db pull",
+    "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma db push",
+    "prisma:studio": "npx prisma studio",
+    "seed": "node src/seed.js",
+    "seed:about": "node seed_about_us.js",
+    "seed:features": "node seed_dynamic_features.js",
+    "seed:wcu": "node seed_wcu.js",
+    "seed:all": "npm run seed && npm run seed:about && npm run seed:features && npm run seed:wcu"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prisma": "^6.9.0"
+  }
+}
