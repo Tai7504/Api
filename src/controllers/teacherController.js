@@ -1,6 +1,5 @@
 const prisma = require('../prismaClient')
-const fs = require('fs')
-const path = require('path')
+const { deleteUploadedFile } = require('../helpers/fileHelper')
 
 // GET tất cả giáo viên (Public)
 exports.getAll = async (req, res) => {
@@ -11,6 +10,7 @@ exports.getAll = async (req, res) => {
     })
     res.json({ success: true, data: teachers })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -24,6 +24,7 @@ exports.getAllAdmin = async (req, res) => {
     })
     res.json({ success: true, data: teachers })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -39,6 +40,7 @@ exports.getById = async (req, res) => {
     }
     res.json({ success: true, data: teacher })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -60,6 +62,7 @@ exports.create = async (req, res) => {
     })
     res.status(201).json({ success: true, data: teacher })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -76,10 +79,7 @@ exports.update = async (req, res) => {
 
     if (req.file) {
       const old = await prisma.teacher.findUnique({ where: { id: parseInt(req.params.id) } })
-      if (old?.image) {
-        const oldPath = path.join(__dirname, '../../', old.image)
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath)
-      }
+      deleteUploadedFile(old?.image)
       data.image = `/uploads/${req.file.filename}`
     }
 
@@ -89,6 +89,7 @@ exports.update = async (req, res) => {
     })
     res.json({ success: true, data: teacher })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -96,12 +97,16 @@ exports.update = async (req, res) => {
 // DELETE (Soft delete)
 exports.delete = async (req, res) => {
   try {
+    const teacher = await prisma.teacher.findUnique({ where: { id: parseInt(req.params.id) } })
+    deleteUploadedFile(teacher?.image)
+
     await prisma.teacher.update({
       where: { id: parseInt(req.params.id) },
       data: { is_deleted: true, Modify_by: req.user?.username || null }
     })
     res.json({ success: true, message: 'Đã xóa giáo viên!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

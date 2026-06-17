@@ -71,6 +71,7 @@ exports.create = async (req, res) => {
       data: lead
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -107,6 +108,7 @@ exports.getAll = async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -123,6 +125,7 @@ exports.getById = async (req, res) => {
     }
     res.json({ success: true, data: lead })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -146,6 +149,7 @@ exports.update = async (req, res) => {
     })
     res.json({ success: true, data: lead })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -159,6 +163,7 @@ exports.delete = async (req, res) => {
     })
     res.json({ success: true, message: 'Đã xóa!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

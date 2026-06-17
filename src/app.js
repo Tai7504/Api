@@ -7,11 +7,8 @@ process.setMaxListeners(20)
 const app = express()
 
 // ===== MIDDLEWARE =====
-const corsOrigins = (process.env.CORS_ORIGINS || 'http://103.90.225.223:5173,http://103.90.225.223:5000').split(',')
-
 app.use(cors({
-  origin: corsOrigins,
-  credentials: true
+  origin: '*'
 }))
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
@@ -58,22 +55,22 @@ app.use((err, req, res, next) => {
   })
 })
 
+// ===== REQUEST LOGGER =====
+app.use((req, res, next) => {
+  const start = Date.now()
+  res.on('finish', () => {
+    const duration = Date.now() - start
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} → ${res.statusCode} (${duration}ms)`)
+  })
+  next()
+})
+
 // ===== START SERVER =====
 const PORT = process.env.PORT || 8080
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Driving School API đang chạy tại http://localhost:${PORT}`)
-  console.log(` Health check: http://localhost:${PORT}/api/health`)
-  console.log(``)
-  console.log(`API Endpoints:`)
-  console.log(`   POST /api/auth/login`)
-  console.log(`   GET  /api/courses`)
-  console.log(`   GET  /api/license-types`)
-  console.log(`   GET  /api/teachers`)
-  console.log(`   GET  /api/news`)
-  console.log(`   GET  /api/achievements`)
-  console.log(`   GET  /api/system-settings`)
-  console.log(`   GET  /api/banners`)
-  console.log(`   POST /api/leads              ← Form Landing Page`)
-  console.log(`   GET  /api/students            ← Admin`)
-  console.log(`   GET  /api/course-registrations ← Admin`)
+  console.log(`====================================`)
+  console.log(` Driving School API`)
+  console.log(` Port: ${PORT}`)
+  console.log(` Health: http://localhost:${PORT}/api/health`)
+  console.log(`====================================`)
 })

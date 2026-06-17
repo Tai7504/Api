@@ -22,6 +22,7 @@ exports.uploadChunk = async (req, res) => {
       data: { fileId, chunkIndex: parseInt(chunkIndex), totalChunks: parseInt(totalChunks) }
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -85,6 +86,7 @@ exports.mergeChunks = async (req, res) => {
       res.status(500).json({ success: false, message: err.message })
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -110,6 +112,7 @@ exports.cancelUpload = async (req, res) => {
 
     res.json({ success: true, message: ' Hủy upload!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

@@ -23,6 +23,7 @@ exports.getActive = async (req, res) => {
 
     res.json({ success: true, data: formatted })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -50,6 +51,7 @@ exports.getAllAdmin = async (req, res) => {
 
     res.json({ success: true, data: formatted })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -79,6 +81,7 @@ exports.getById = async (req, res) => {
 
     res.json({ success: true, data: formatted })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -162,6 +165,7 @@ exports.create = async (req, res) => {
 
     res.status(201).json({ success: true, data: voucher })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -224,6 +228,7 @@ exports.update = async (req, res) => {
 
     res.json({ success: true, data: updated })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -237,6 +242,7 @@ exports.delete = async (req, res) => {
     })
     res.json({ success: true, message: 'Đã xóa voucher thành công!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

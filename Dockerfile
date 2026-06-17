@@ -23,5 +23,5 @@ VOLUME ["/app/uploads"]
 # Expose API port
 EXPOSE 8080
 
-# Wait for DB to be ready before migrate + seed + start
-CMD ["sh", "-c", "echo 'Waiting for database...' && sleep 20 && npx prisma db push && npm run seed:all && npm start"]
+# Wait for DB to be ready before migrate + start
+CMD ["sh", "-c", "echo 'Waiting for database...' && sleep 20 && npm start"]

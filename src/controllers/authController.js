@@ -67,6 +67,7 @@ exports.login = async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message:"Đã xảy ra lỗi" })
   }
 }
@@ -105,6 +106,7 @@ exports.register = async (req, res) => {
       data: { id: admin.id, username: admin.username, role: admin.role }
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -118,6 +120,7 @@ exports.getMe = async (req, res) => {
     })
     res.json({ success: true, data: admin })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -173,6 +176,7 @@ exports.refreshToken = async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -192,6 +196,7 @@ exports.logout = async (req, res) => {
 
     res.json({ success: true, message: 'Đăng xuất thành công!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -239,6 +244,7 @@ exports.changePassword = async (req, res) => {
 
     res.json({ success: true, message: 'Đổi mật khẩu thành công!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

@@ -1,3 +1,7 @@
 node_modules
 npm-debug.log
 .env
+src/seed.js
+seed_about_us.js
+seed_dynamic_features.js
+seed_wcu.js

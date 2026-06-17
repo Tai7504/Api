@@ -36,6 +36,7 @@ exports.getAll = async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -59,6 +60,7 @@ exports.getById = async (req, res) => {
     const { password_hash, ...data } = student
     res.json({ success: true, data })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -97,6 +99,7 @@ exports.create = async (req, res) => {
     const { password_hash: _, ...data } = student
     res.status(201).json({ success: true, data })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -120,6 +123,7 @@ exports.update = async (req, res) => {
     const { password_hash, ...result } = student
     res.json({ success: true, data: result })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -133,6 +137,7 @@ exports.delete = async (req, res) => {
     })
     res.json({ success: true, message: 'Đã xóa học viên!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

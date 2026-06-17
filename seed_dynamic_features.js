@@ -9,7 +9,7 @@ async function seed() {
 
   await prisma.systemSetting.upsert({
     where: { setting_key: 'about_features' },
-    update: { setting_value: JSON.stringify(features) },
+    update: {},
     create: { setting_key: 'about_features', setting_value: JSON.stringify(features), description: 'Dynamic features list' },
   });
   console.log('Done seeding dynamic features');

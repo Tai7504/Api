@@ -26,7 +26,7 @@ async function seed() {
   for (const item of settings) {
     await prisma.systemSetting.upsert({
       where: { setting_key: item.setting_key },
-      update: { setting_value: item.setting_value },
+      update: {},
       create: { setting_key: item.setting_key, setting_value: item.setting_value, description: 'Why Choose Us settings' },
     });
   }

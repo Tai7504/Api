@@ -1,6 +1,5 @@
 const prisma = require('../prismaClient')
-const fs = require('fs')
-const path = require('path')
+const { deleteUploadedFile } = require('../helpers/fileHelper')
 
 // GET tất cả ảnh WCU (Public)
 exports.getAll = async (req, res) => {
@@ -11,6 +10,7 @@ exports.getAll = async (req, res) => {
     })
     res.json({ success: true, data: images })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -24,6 +24,7 @@ exports.getAllAdmin = async (req, res) => {
     })
     res.json({ success: true, data: images })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -49,6 +50,7 @@ exports.create = async (req, res) => {
     })
     res.status(201).json({ success: true, data: image })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -65,10 +67,7 @@ exports.update = async (req, res) => {
 
     if (req.file) {
       const old = await prisma.wcuImage.findUnique({ where: { id: parseInt(req.params.id) } })
-      if (old?.image_url) {
-        const oldPath = path.join(__dirname, '../../', old.image_url)
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath)
-      }
+      deleteUploadedFile(old?.image_url)
       data.image_url = `/uploads/${req.file.filename}`
     }
 
@@ -78,6 +77,7 @@ exports.update = async (req, res) => {
     })
     res.json({ success: true, data: image })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -85,12 +85,16 @@ exports.update = async (req, res) => {
 // DELETE (Soft delete)
 exports.delete = async (req, res) => {
   try {
+    const wcuImage = await prisma.wcuImage.findUnique({ where: { id: parseInt(req.params.id) } })
+    deleteUploadedFile(wcuImage?.image_url)
+
     await prisma.wcuImage.update({
       where: { id: parseInt(req.params.id) },
       data: { is_deleted: true, Modify_by: req.user?.username || null }
     })
     res.json({ success: true, message: 'Đã xóa ảnh!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

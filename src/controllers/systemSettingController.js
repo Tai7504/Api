@@ -11,6 +11,7 @@ exports.getAll = async (req, res) => {
     })
     res.json({ success: true, data: result })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -21,6 +22,7 @@ exports.getAllAdmin = async (req, res) => {
     const settings = await prisma.systemSetting.findMany()
     res.json({ success: true, data: settings })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -36,6 +38,7 @@ exports.getByKey = async (req, res) => {
     }
     res.json({ success: true, data: setting })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -77,6 +80,7 @@ exports.upsert = async (req, res) => {
 
     res.json({ success: true, data: setting })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -121,6 +125,7 @@ exports.bulkUpdate = async (req, res) => {
 
     res.json({ success: true, data: results })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
@@ -133,6 +138,7 @@ exports.delete = async (req, res) => {
     })
     res.json({ success: true, message: 'Đã xóa setting!' })
   } catch (error) {
+    console.error('[ERROR]', req.method, req.originalUrl, error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
