@@ -7,18 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ===== BẢNG ADMINS (Tài khoản quản trị) =====
 model Admin {
-  id            Int       @id @default(autoincrement())
-  username      String    @unique @db.NVarChar(255)
-  password_hash String    @db.VarChar(255)
-  email         String?   @db.NVarChar(255)
-  role          String?   @db.VarChar(255)
-  status        Boolean   @default(true)
-  Created_time  DateTime  @default(now())
-  Created_by    String?   @db.NVarChar(255)
-  Modify_time   DateTime? @updatedAt
-  Modify_by     String?   @db.NVarChar(255)
+  id                    Int       @id @default(autoincrement())
+  username              String    @unique @db.NVarChar(255)
+  password_hash         String    @db.VarChar(255)
+  email                 String?   @db.NVarChar(255)
+  role                  String?   @db.VarChar(255)
+  status                Boolean   @default(true)
+  Created_time          DateTime  @default(now())
+  Created_by            String?   @db.NVarChar(255)
+  Modify_time           DateTime? @updatedAt
+  Modify_by             String?   @db.NVarChar(255)
   is_deleted            Boolean   @default(false)
   refresh_token         String?   @db.VarChar(500)
   refresh_token_expires DateTime?
@@ -26,104 +25,97 @@ model Admin {
   @@map("admins")
 }
 
-// ===== BẢNG LICENSE_TYPE (Danh mục loại bằng: B1, B2, C...) =====
 model LicenseType {
-  id            Int       @id @default(autoincrement())
-  code          String?   @unique @db.NVarChar(10)
-  name          String?   @db.NVarChar(100)
-  description   String?   @db.NVarChar(Max)
-  Created_time  DateTime  @default(now())
-  Created_by    String?   @db.NVarChar(255)
-  Modify_time   DateTime? @updatedAt
-  Modify_by     String?   @db.NVarChar(255)
-  is_deleted    Boolean   @default(false)
-
-  courses       Course[]
+  id           Int       @id @default(autoincrement())
+  code         String?   @unique @db.NVarChar(10)
+  name         String?   @db.NVarChar(100)
+  description  String?   @db.NVarChar(Max)
+  Created_time DateTime  @default(now())
+  Created_by   String?   @db.NVarChar(255)
+  Modify_time  DateTime? @updatedAt
+  Modify_by    String?   @db.NVarChar(255)
+  is_deleted   Boolean   @default(false)
+  courses      Course[]
 
   @@map("license_type")
 }
 
-// ===== BẢNG COURSES (Khóa học) =====
 model Course {
-  id                  Int       @id @default(autoincrement())
-  name                String?   @db.NVarChar(255)
-  image               String?   @db.VarChar(255)
-  images              String?   @db.VarChar(Max)
-  description         String?   @db.NVarChar(Max)
-  content             String?   @db.NVarChar(Max)
-  price               Decimal?  @db.Decimal(18, 0)
-  banner              String?   @db.VarChar(255)
-  discount_percentage Int?      @default(0)
+  id                  Int                  @id @default(autoincrement())
+  name                String?              @db.NVarChar(255)
+  image               String?              @db.VarChar(255)
+  images              String?              @db.VarChar(Max)
+  description         String?              @db.NVarChar(Max)
+  price               Decimal?             @db.Decimal(18, 0)
+  banner              String?              @db.VarChar(255)
+  discount_percentage Int?                 @default(0)
   license_type_id     Int?
-  status              Boolean   @default(true)
-  sort_order          Int       @default(0)
-  Created_time        DateTime  @default(now())
-  Created_by          String?   @db.NVarChar(255)
-  Modify_time         DateTime? @updatedAt
-  Modify_by           String?   @db.NVarChar(255)
-  is_deleted          Boolean   @default(false)
-
-  license_type        LicenseType? @relation(fields: [license_type_id], references: [id])
-  leads               Lead[]
+  status              Boolean              @default(true)
+  Created_time        DateTime             @default(now())
+  Created_by          String?              @db.NVarChar(255)
+  Modify_time         DateTime?            @updatedAt
+  Modify_by           String?              @db.NVarChar(255)
+  is_deleted          Boolean              @default(false)
+  content             String?              @db.NVarChar(Max)
+  sort_order          Int                  @default(0)
   registrations       CourseRegistration[]
+  license_type        LicenseType?         @relation(fields: [license_type_id], references: [id])
+  leads               Lead[]
   vouchers            VoucherCourse[]
 
   @@map("courses")
 }
 
-// ===== BẢNG TEACHER (Giáo viên) =====
 model Teacher {
-  id            Int       @id @default(autoincrement())
-  name          String?   @db.NVarChar(255)
-  image         String?   @db.VarChar(255)
-  description   String?   @db.NVarChar(Max)
-  status        Boolean   @default(true)
-  Created_time  DateTime  @default(now())
-  Created_by    String?   @db.NVarChar(255)
-  Modify_time   DateTime? @updatedAt
-  Modify_by     String?   @db.NVarChar(255)
-  is_deleted    Boolean   @default(false)
+  id           Int       @id @default(autoincrement())
+  name         String?   @db.NVarChar(255)
+  image        String?   @db.VarChar(255)
+  description  String?   @db.NVarChar(Max)
+  status       Boolean   @default(true)
+  Created_time DateTime  @default(now())
+  Created_by   String?   @db.NVarChar(255)
+  Modify_time  DateTime? @updatedAt
+  Modify_by    String?   @db.NVarChar(255)
+  is_deleted   Boolean   @default(false)
+  sort_order   Int       @default(0)
 
   @@map("teacher")
 }
 
-// ===== BẢNG NEWS (Tin tức) =====
 model News {
-  id               Int       @id @default(autoincrement())
-  title            String?   @db.NVarChar(255)
-  thumbnail_image  String?   @db.VarChar(255)
-  sapo             String?   @db.NVarChar(500)
-  content          String?   @db.NVarChar(Max)
-  tags             String?   @db.NVarChar(500)
-  status           Boolean   @default(true)
-  Created_time     DateTime  @default(now())
-  Created_by       String?   @db.NVarChar(255)
-  Modify_time      DateTime? @updatedAt
-  Modify_by        String?   @db.NVarChar(255)
-  is_deleted       Boolean   @default(false)
+  id              Int       @id @default(autoincrement())
+  title           String?   @db.NVarChar(255)
+  thumbnail_image String?   @db.VarChar(255)
+  sapo            String?   @db.NVarChar(500)
+  content         String?   @db.NVarChar(Max)
+  tags            String?   @db.NVarChar(500)
+  status          Boolean   @default(true)
+  Created_time    DateTime  @default(now())
+  Created_by      String?   @db.NVarChar(255)
+  Modify_time     DateTime? @updatedAt
+  Modify_by       String?   @db.NVarChar(255)
+  is_deleted      Boolean   @default(false)
 
   @@map("news")
 }
 
-// ===== BẢNG ACHIEVEMENTS (Bằng khen, uy tín) =====
 model Achievement {
-  id            Int       @id @default(autoincrement())
-  title         String?   @db.NVarChar(255)
-  image         String?   @db.VarChar(255)
-  images        String?   @db.VarChar(Max)
-  description   String?   @db.NVarChar(255)
-  status        Boolean   @default(true)
-  sort_order    Int       @default(0)
-  Created_time  DateTime  @default(now())
-  Created_by    String?   @db.NVarChar(255)
-  Modify_time   DateTime? @updatedAt
-  Modify_by     String?   @db.NVarChar(255)
-  is_deleted    Boolean   @default(false)
+  id           Int       @id @default(autoincrement())
+  title        String?   @db.NVarChar(255)
+  image        String?   @db.VarChar(255)
+  images       String?   @db.VarChar(Max)
+  description  String?   @db.NVarChar(255)
+  status       Boolean   @default(true)
+  sort_order   Int       @default(0)
+  Created_time DateTime  @default(now())
+  Created_by   String?   @db.NVarChar(255)
+  Modify_time  DateTime? @updatedAt
+  Modify_by    String?   @db.NVarChar(255)
+  is_deleted   Boolean   @default(false)
 
   @@map("achievements")
 }
 
-// ===== BẢNG SYSTEM_SETTINGS (Thông tin trung tâm - key/value) =====
 model SystemSetting {
   id            Int       @id @default(autoincrement())
   setting_key   String?   @unique @db.VarChar(255)
@@ -135,7 +127,6 @@ model SystemSetting {
   @@map("system_settings")
 }
 
-// ===== BẢNG BANNER =====
 model Banner {
   id            Int       @id @default(autoincrement())
   title         String?   @db.NVarChar(100)
@@ -152,7 +143,6 @@ model Banner {
   @@map("banner")
 }
 
-// ===== BẢNG WCU_IMAGES (Ảnh carousel "Vì sao chọn chúng tôi") =====
 model WcuImage {
   id            Int       @id @default(autoincrement())
   title         String?   @db.NVarChar(100)
@@ -168,98 +158,87 @@ model WcuImage {
   @@map("wcu_images")
 }
 
-// ===== BẢNG STUDENTS (Học viên - tài khoản & thông tin cá nhân) =====
 model Student {
-  id              Int       @id @default(autoincrement())
-  username        String?   @unique @db.VarChar(50)
-  password_hash   String?   @db.VarChar(255)
-  full_name       String?   @db.NVarChar(100)
-  phone           String?   @db.VarChar(20)
-  email           String?   @db.VarChar(100)
-  address         String?   @db.NVarChar(255)
-  account_status  Int       @default(0) // 0: Chờ kích hoạt, 1: Hoạt động, 2: Bị khóa
-  created_time    DateTime  @default(now())
-  Modify_time     DateTime? @updatedAt
-  Modify_by       String?   @db.NVarChar(255)
-  is_deleted      Boolean   @default(false)
-
-  registrations   CourseRegistration[]
+  id             Int                  @id @default(autoincrement())
+  username       String?              @unique @db.VarChar(50)
+  password_hash  String?              @db.VarChar(255)
+  full_name      String?              @db.NVarChar(100)
+  phone          String?              @db.VarChar(20)
+  email          String?              @db.VarChar(100)
+  address        String?              @db.NVarChar(255)
+  account_status Int                  @default(0)
+  created_time   DateTime             @default(now())
+  Modify_time    DateTime?            @updatedAt
+  Modify_by      String?              @db.NVarChar(255)
+  is_deleted     Boolean              @default(false)
+  registrations  CourseRegistration[]
 
   @@map("students")
 }
 
-// ===== BẢNG COURSE_REGISTRATIONS (Giao dịch đăng ký khóa học) =====
 model CourseRegistration {
-  id              Int       @id @default(autoincrement())
-  student_id      Int?
-  course_id       Int?
-  current_price   Decimal?  @db.Decimal(18, 2)
-  payment_status  Int       @default(0) // 0: Chưa thanh toán, 1: Đã cọc, 2: Đã thanh toán đủ
-  process_status  Int       @default(0) // 0: Mới gửi form, 1: Xử lý hồ sơ, 2: Đã xếp lớp, 3: Hoàn thành
-  notes           String?   @db.NVarChar(Max)
-  created_time    DateTime  @default(now())
-  Modify_time     DateTime? @updatedAt
-  Modify_by       String?   @db.NVarChar(255)
-  is_deleted      Boolean   @default(false)
-
-  student         Student?  @relation(fields: [student_id], references: [id])
-  course          Course?   @relation(fields: [course_id], references: [id])
+  id             Int       @id @default(autoincrement())
+  student_id     Int?
+  course_id      Int?
+  current_price  Decimal?  @db.Decimal(18, 2)
+  payment_status Int       @default(0)
+  process_status Int       @default(0)
+  notes          String?   @db.NVarChar(Max)
+  created_time   DateTime  @default(now())
+  Modify_time    DateTime? @updatedAt
+  Modify_by      String?   @db.NVarChar(255)
+  is_deleted     Boolean   @default(false)
+  course         Course?   @relation(fields: [course_id], references: [id])
+  student        Student?  @relation(fields: [student_id], references: [id])
 
   @@map("course_registrations")
 }
 
-// ===== BẢNG LEADS (Khách hàng tiềm năng - Form Landing Page) =====
 model Lead {
-  id                  Int       @id @default(autoincrement())
-  full_name           String?   @db.NVarChar(100)
-  phone               String?   @db.VarChar(20)
-  email               String?   @db.VarChar(100)
-  address             String?   @db.NVarChar(255)
+  id                   Int       @id @default(autoincrement())
+  full_name            String?   @db.NVarChar(100)
+  phone                String?   @db.VarChar(20)
+  email                String?   @db.VarChar(100)
+  address              String?   @db.NVarChar(255)
   course_interested_id Int?
-  customer_notes      String?   @db.NVarChar(Max)
-  telesale_notes      String?   @db.NVarChar(Max)
-  status              Int       @default(0) // 0: Mới, 1: Đang tư vấn, 2: Đã chốt, 3: Spam/Hủy
-  created_time        DateTime  @default(now())
-  Modify_time         DateTime? @updatedAt
-  Modify_by           String?   @db.NVarChar(255)
-  is_deleted          Boolean   @default(false)
-
-  course_interested   Course?   @relation(fields: [course_interested_id], references: [id])
+  customer_notes       String?   @db.NVarChar(Max)
+  telesale_notes       String?   @db.NVarChar(Max)
+  status               Int       @default(0)
+  created_time         DateTime  @default(now())
+  Modify_time          DateTime? @updatedAt
+  Modify_by            String?   @db.NVarChar(255)
+  is_deleted           Boolean   @default(false)
   applied_voucher_code String?   @db.NVarChar(50)
-  original_price       Decimal?  @db.Decimal(18, 0)
   final_price          Decimal?  @db.Decimal(18, 0)
+  original_price       Decimal?  @db.Decimal(18, 0)
+  course_interested    Course?   @relation(fields: [course_interested_id], references: [id])
 
   @@map("leads")
 }
 
-// ===== BẢNG VOUCHERS (Mã giảm giá) =====
 model Voucher {
-  id            Int       @id @default(autoincrement())
-  code          String    @unique @db.NVarChar(50)
-  discount      Int       // Phần trăm giảm giá (0-100)
-  description   String?   @db.NVarChar(500)
-  terms         String?   @db.NVarChar(Max)
-  status        Boolean   @default(true)
-  Created_time  DateTime  @default(now())
-  Created_by    String?   @db.NVarChar(255)
-  Modify_time   DateTime? @updatedAt
-  Modify_by     String?   @db.NVarChar(255)
-  is_deleted    Boolean   @default(false)
-
-  courses       VoucherCourse[]
+  id           Int             @id @default(autoincrement())
+  code         String          @unique @db.NVarChar(50)
+  discount     Int
+  description  String?         @db.NVarChar(500)
+  terms        String?         @db.NVarChar(Max)
+  status       Boolean         @default(true)
+  Created_time DateTime        @default(now())
+  Created_by   String?         @db.NVarChar(255)
+  Modify_time  DateTime?       @updatedAt
+  Modify_by    String?         @db.NVarChar(255)
+  is_deleted   Boolean         @default(false)
+  courses      VoucherCourse[]
 
   @@map("vouchers")
 }
 
-// ===== BẢNG LIÊN KẾT VOUCHER VÀ KHÓA HỌC =====
 model VoucherCourse {
   voucher_id Int
   course_id  Int
-
-  voucher    Voucher @relation(fields: [voucher_id], references: [id], onDelete: Cascade)
   course     Course  @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  voucher    Voucher @relation(fields: [voucher_id], references: [id], onDelete: Cascade)
 
   @@id([voucher_id, course_id])
   @@map("voucher_courses")
 }
-
